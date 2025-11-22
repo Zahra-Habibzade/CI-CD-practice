@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Js sentry practice</title>
+    <link rel="icon" type="image/x-icon" href="./Images/Js.jpg">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script
+        src="https://js-de.sentry-cdn.com/8a96d1284f9312c340bf5d8649492c70.min.js"
+        crossorigin="anonymous"
+    ></script>
+    <style>
+        :root {
+            --color-dark-bg: #393E46; 
+            --color-dark-text: #EEEEEE; 
+            --color-accent-yellow: #FFD369; 
+            --color-dark-primary: #222831; 
+            --color-error-red: #C66E52; 
+        }
+        .bg-custom-dark-bg { background-color: var(--color-dark-bg); }
+        .text-custom-dark-text { color: var(--color-dark-text); }
+        .bg-custom-dark-primary { background-color: var(--color-dark-primary); }
+        .bg-custom-accent-yellow { background-color: var(--color-accent-yellow); }
+        .text-custom-error { color: var(--color-error-red); }
+    </style>
+
+</head>
+<body class="bg-custom-dark-bg min-h-screen flex items-center justify-center p-4">
+
+    <div class="w-full max-w-lg bg-[#2d333a] shadow-2xl rounded-xl p-8 space-y-8 border border-gray-600">
+        
+        <header class="text-center space-y-2 pb-4 border-b border-gray-700">
+            <h2 class="text-2xl font-mono text-custom-accent-yellow text-yellow-300 justify-center">
+                Js sentry practice</span>
+            </h2>
+        </header>
+        
+        <h1 class="text-3xl font-extrabold text-center text-custom-dark-text">
+            ثبت نام
+        </h1>
+
+        <div class="flex justify-around gap-3">
+            <button class="flex-1 py-3 rounded-lg font-bold transition duration-300 shadow-lg 
+                           bg-yellow-300 text-gray-900 hover:opacity-90">
+                Error
+            </button>
+            <button class="flex-1 py-3 rounded-lg font-bold transition duration-300 shadow-lg 
+                           bg-red-400 text-gray-900 hover:bg-opacity-90">
+                Critical
+            </button>
+            <button class="flex-1 py-3 rounded-lg font-bold transition duration-300 shadow-lg 
+                           bg-blue-400 text-gray-900 hover:bg-opacity-90">
+                Info
+            </button>
+        </div>
+
+        <div class="border-t border-gray-700"></div>
+
+        <form class="space-y-6">
+            <div>
+                <label for="name" class="block text-sm font-medium text-custom-dark-text mb-1">
+                    نام کامل
+                </label>
+                <input type="text" id="name" name="name" required
+                       class="w-full px-4 py-3 border border-gray-600 rounded-lg focus:ring-custom-accent-yellow focus:border-custom-accent-yellow transition duration-150 shadow-inner bg-[#222831] text-custom-dark-text placeholder-gray-500"
+                       placeholder="مثال: زهرا حبیب زاده">
+            </div>
+
+            <div>
+                <label for="phone" class="block text-sm font-medium text-custom-dark-text mb-1">
+                    شماره تلفن
+                </label>
+                <input type="tel" id="phone" name="phone" required
+                       class="w-full px-4 py-3 border border-gray-600 rounded-lg focus:ring-custom-accent-yellow focus:border-custom-accent-yellow transition duration-150 shadow-inner bg-[#222831] text-custom-dark-text placeholder-gray-500"
+                       placeholder="مثال: 09121234567">
+            </div>
+
+            <div>
+                <button type="submit" 
+                        class="w-full py-3 mt-4 rounded-lg text-lg font-bold text-gray-900 shadow-xl transition duration-300 
+                               bg-custom-accent-yellow hover:bg-opacity-90 focus:outline-none focus:ring-4 focus:ring-custom-accent-yellow focus:ring-opacity-50">
+                    ثبت نام نهایی
+                </button>
+            </div>
+        </form>
+
+    </div>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const buttons = document.querySelectorAll("button");
+
+        buttons.forEach(btn => {
+            btn.addEventListener("click", () => {
+                const label = btn.innerText.trim();
+
+                Sentry.captureMessage(`Button clicked: ${label}`, {
+                    level:
+                        label === "Error"
+                            ? "error"
+                            : label === "Critical"
+                            ? "fatal"
+                            : "info"
+                });
+            });
+        });
+
+        const form = document.querySelector("form");
+        form.addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            const name = document.getElementById("name").value.trim();
+            const phone = document.getElementById("phone").value.trim();
+
+            Sentry.captureMessage(
+                `User Registered | Name: ${name} | Phone: ${phone}`,
+                { level: "info" }
+            );
+
+            form.submit();
+        });
+    });
+</script>
+
+    <!-- <script>
+        // Send a test metric before calling undefined function
+  Sentry.metrics.count('test_counter', 1);
+  myUndefinedFunction();
+    </script> -->
+</body>
+
+</html>
